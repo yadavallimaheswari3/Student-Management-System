@@ -1,0 +1,116 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #1d4ed8;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px #00000010;
+        }
+
+        h2 {
+            color: #1d4ed8;
+            margin-top: 0;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        button, .cancel {
+            display: inline-block;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .cancel {
+            background: #64748b;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Student Management System</h1>
+        <p>Edit Student Details</p>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Update Student</h2>
+
+            <form action="/update/{{ student.id }}" method="POST">
+                <label for="name">Student Name</label>
+                <input id="name" type="text" name="name"
+                       value="{{ student.name }}" required>
+
+                <label for="roll">Roll Number</label>
+                <input id="roll" type="text" name="roll"
+                       value="{{ student.roll }}" required>
+
+                <label for="branch">Branch</label>
+                <input id="branch" type="text" name="branch"
+                       value="{{ student.branch }}" required>
+
+                <label for="year">Year</label>
+                <input id="year" type="number" name="year"
+                       value="{{ student.year }}"
+                       min="1" max="4" required>
+
+                <label for="email">Email Address</label>
+                <input id="email" type="email" name="email"
+                       value="{{ student.email }}" required>
+
+                <button type="submit">Save Changes</button>
+                <a class="cancel" href="/">Cancel</a>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>
+```

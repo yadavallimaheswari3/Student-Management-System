@@ -1,0 +1,324 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            color: #333;
+            margin: 0;
+        }
+
+        header {
+            background: #1d4ed8;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+            position: relative;
+        }
+
+        header h1 {
+            margin-top: 0;
+        }
+
+        .logout-form {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            margin: 0;
+        }
+
+        .logout-button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-button:hover {
+            background: #b91c1c;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px #00000010;
+        }
+
+        h2 {
+            color: #1d4ed8;
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        button, .link-button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        button:hover, .link-button:hover {
+            background: #1e40af;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-form input {
+            flex: 1;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+
+        .success {
+            color: #166534;
+            background: #dcfce7;
+        }
+
+        .error {
+            color: #991b1b;
+            background: #fee2e2;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+        }
+
+        th {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .delete-button {
+            background: #dc2626;
+            margin: 0;
+        }
+
+        .delete-button:hover {
+            background: #b91c1c;
+        }
+
+        .action-form {
+            display: inline;
+        }
+
+        .register-button {
+            margin-top: 18px;
+        }
+
+        .show-all {
+            white-space: nowrap;
+            align-self: center;
+            color: #2563eb;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding-top: 65px;
+            }
+
+            .logout-form {
+                top: 12px;
+                right: 12px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-form {
+                flex-wrap: wrap;
+            }
+
+            .search-form button {
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <form action="{{ url_for('logout') }}" method="POST"
+          class="logout-form">
+        <button type="submit" class="logout-button">
+            Logout
+        </button>
+    </form>
+
+    <h1>Student Management System</h1>
+    <p>Register and manage student details easily</p>
+</header>
+
+<main class="container">
+
+    <!-- Registration Form -->
+    <section class="card">
+        <h2>Register New Student</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <p class="message {{ category }}">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+
+        <form action="{{ url_for('add_student') }}" method="POST">
+            <div class="form-grid">
+                <input type="text" name="name"
+                       placeholder="Student Name" required>
+
+                <input type="text" name="roll"
+                       placeholder="Roll Number" required>
+
+                <input type="text" name="branch"
+                       placeholder="Branch (CSE)" required>
+
+                <input type="number" name="year"
+                       placeholder="Year (1-4)"
+                       min="1" max="4" required>
+
+                <input type="email" name="email"
+                       placeholder="Email Address" required>
+            </div>
+
+            <button type="submit" class="register-button">
+                Register Student
+            </button>
+        </form>
+    </section>
+
+    <!-- Student Search and List -->
+    <section class="card">
+        <h2>Registered Students</h2>
+
+        <form action="{{ url_for('home') }}" method="GET"
+              class="search-form">
+            <input
+                type="text"
+                name="search"
+                placeholder="Search by name or roll number"
+                value="{{ search }}"
+            >
+
+            <button type="submit">Search</button>
+            <a href="{{ url_for('home') }}" class="show-all">Show All</a>
+        </form>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Roll Number</th>
+                        <th>Branch</th>
+                        <th>Year</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.id }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.roll }}</td>
+                        <td>{{ student.branch }}</td>
+                        <td>{{ student.year }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_student', student_id=student.id) }}">
+                                Edit
+                            </a>
+
+                            <form
+                                action="{{ url_for('delete_student', student_id=student.id) }}"
+                                method="POST"
+                                class="action-form"
+                                onsubmit="return confirm('Delete this student?')"
+                            >
+                                <button type="submit" class="delete-button">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7">No students found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>
+```
